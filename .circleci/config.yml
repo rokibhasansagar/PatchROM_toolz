@@ -10,7 +10,7 @@ jobs:
           name: Run The Roller
           command: |
             chmod a+x .circleci/act.sh ./script.sh .circleci/ghr
-            echo "Running..."; .circleci/act.sh & ./script.sh $PatchCode $Link $Branch $GitHubMail $GitHubName $FTPHost $FTPUser $FTPPass
+            echo "Running..."; .circleci/act.sh & ./script.sh $PatchCode $Link $BRANCH $GitHubMail $GitHubName $FTPHost $FTPUser $FTPPass
       - run:
           name: Upload the Package to AFH
           command: |
