@@ -65,10 +65,12 @@ echo -e "Please be patient, this will take time"
 
 mkdir -p ~/project/files/
 
-export XZ_OPT=-9e
+export XZ_OPT=-9
 
-time tar -I pxz -cf ~/project/files/$PatchCode-$BRANCH-files-$(date +%Y%m%d).tar.xz *
-echo -en "Final Compressed size of the consolidated checked-out archive is ---  "
+echo -e "Compressing and Making 1GB parts Because of Huge Data Amount \nBe Patient..."
+time tar -I pxz -cf - * | split -b 1024M - ~/project/files/$PatchCode-$BRANCH-files-$(date +%Y%m%d).tar.xz.
+# Show Total Sizes of the compressed .repo
+echo -en "Final Compressed size of the consolidated checked-out files is ---  "
 du -sh ~/project/files/$PatchCode-$BRANCH-files*.tar.xz
 
 echo -e "Compression Done"
@@ -102,6 +104,6 @@ for file in $PatchCode-$BRANCH*; do curl --upload-file $file https://transfer.sh
 
 echo -e "GitHub Release"
 cd ~/project/
-ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' -n 'Compressed Files for $PatchCode' $PatchCode ~/project/files/
+ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' -n 'Compressed Files for \$PatchCode' $PatchCode ~/project/files/
 
 echo -e "\nCongratulations! Job Done!"
