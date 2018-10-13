@@ -20,7 +20,7 @@ FTPHost=$6 && FTPUser=$7 && FTPPass=$8
 
 echo -e "Making Update and Installing Apps"
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install tar pxz wput -y
+sudo apt-get install tar wput -y
 
 echo -e "ReEnable PATH and Set Repo & GHR"
 mkdir ~/bin ; echo ~/bin || echo "bin folder creation error"
@@ -65,10 +65,10 @@ echo -e "Please be patient, this will take time"
 
 mkdir -p ~/project/files/
 
-export XZ_OPT=-9
+export XZ_OPT=-9e
 
 echo -e "Compressing and Making 1GB parts Because of Huge Data Amount \nBe Patient..."
-time tar -I pxz -cf - * | split -b 1024M - ~/project/files/$PatchCode-$BRANCH-files-$(date +%Y%m%d).tar.xz.
+time tar -cJvf - * | split -b 1024M - ~/project/files/$PatchCode-$BRANCH-files-$(date +%Y%m%d).tar.xz.
 # Show Total Sizes of the compressed .repo
 echo -en "Final Compressed size of the consolidated checked-out files is ---  "
 du -sh ~/project/files/$PatchCode-$BRANCH-files*.tar.xz
