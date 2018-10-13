@@ -50,7 +50,7 @@ du -sh .repo/ | awk '{print $1}'
 echo -e "Deleting unnecessary .repo folder"
 rm -rf .repo/
 
-echo -en "Removing the residual .git folders from all subfolders"
+echo -e "Removing the residual .git folders from all subfolders"
 find . | grep .git | xargs rm -rf
 
 # Show and Record Total Sizes of the checked-out non-repo files
@@ -91,5 +91,17 @@ du -sh ~/project/files/
 cd $DIR
 # Basic Cleanup
 rm -rf $PatchCode
+
+cd ~/project/files/
+
+echo -e "Upload the Package to AFH"
+for file in $PatchCode-$BRANCH*; do wput $file ftp://"$FTPUser":"$FTPPass"@"$FTPHost"//$PatchCode-NoRepo/ ; done
+
+echo -e "Upload the Package to transfer.sh"
+for file in $PatchCode-$BRANCH*; do curl --upload-file $file https://transfer.sh/ && echo '' ; done
+
+echo -e "GitHub Release"
+cd ~/project/
+ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' -n 'Compressed Files for $PatchCode' $PatchCode ~/project/files/
 
 echo -e "\nCongratulations! Job Done!"

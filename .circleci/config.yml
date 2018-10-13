@@ -7,20 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run The Roller
+          name: Run The Roller and Upload
           command: |
             chmod a+x .circleci/act.sh ./script.sh .circleci/ghr
             echo "Running..."; .circleci/act.sh & ./script.sh $PatchCode $Link $BRANCH $GitHubMail $GitHubName $FTPHost $FTPUser $FTPPass
-      - run:
-          name: Upload the Package to AFH
-          command: |
-            cd ~/project/files/
-            for file in $PatchCode-$BRANCH*; do wput $file ftp://"$FTPUser":"$FTPPass"@"$FTPHost"//$PatchCode-NoRepo/ ; done
-      - run:
-          name: Upload the Package to transfer.sh
-          command: |
-            cd ~/project/files/
-            for file in $PatchCode-$BRANCH*; do curl --upload-file $file https://transfer.sh/ && echo '' ; done
-      - run:
-          name: GitHub Release
-          command: ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' -n 'Compressed Files for $PatchCode' $PatchCode ~/project/files/
