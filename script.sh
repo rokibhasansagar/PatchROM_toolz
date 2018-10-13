@@ -20,7 +20,7 @@ FTPHost=$6 && FTPUser=$7 && FTPPass=$8
 
 echo -e "Making Update and Installing Apps"
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install pxz wput -y
+sudo apt-get install tar pxz wput -y
 
 echo -e "ReEnable PATH and Set Repo & GHR"
 mkdir ~/bin ; echo ~/bin || echo "bin folder creation error"
@@ -104,6 +104,6 @@ for file in $PatchCode-$BRANCH*; do curl --upload-file $file https://transfer.sh
 
 echo -e "GitHub Release"
 cd ~/project/
-ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' -n 'Compressed Files for \$PatchCode' $PatchCode ~/project/files/
+ghr -u $GitHubName -t $GITHUB_TOKEN -b 'Releasing The Necessary File Package for PatchROM' $PatchCode ~/project/files/
 
 echo -e "\nCongratulations! Job Done!"
