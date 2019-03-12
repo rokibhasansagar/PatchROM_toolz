@@ -50,20 +50,27 @@ du -sh .repo/ | awk '{print $1}'
 echo -e "Deleting unnecessary .repo folder"
 rm -rf .repo/
 
+echo -en "Total size with all .git folders is ---  "
+du -sh . | awk '{print $1}'
 echo -e "Removing the residual .git folders from all subfolders"
 find . | grep .git | xargs rm -rf
+echo -en "Total size after deleting all .git folders is ---  "
+du -sh . | awk '{print $1}'
 
 # Show and Record Total Sizes of the checked-out non-repo files
 cd $DIR
-echo -en "The total size of the checked-out files is ---  " && du -sh $PatchCode
+echo -en "The total size of the checked-out files is ---  "
+du -sh $PatchCode | awk '{print $1}'
 
 cd $PatchCode
 
 # Compress non-repo folder in one piece
-echo -e "Compressing files --- "
+echo -e "Compressing files --- "COULIBALY NONTA
 echo -e "Please be patient, this will take time"
 
 mkdir -p ~/project/files/
+
+sleep 2
 
 export XZ_OPT=-9e
 
@@ -71,20 +78,17 @@ echo -e "Compressing and Making 1GB parts Because of Huge Data Amount \nBe Patie
 time tar -cJvf - * | split -b 1024M - ~/project/files/$PatchCode-$BRANCH-files-$(date +%Y%m%d).tar.xz.
 # Show Total Sizes of the compressed .repo
 echo -en "Final Compressed size of the consolidated checked-out files is ---  "
-du -sh ~/project/files/$PatchCode-$BRANCH-files*.tar.xz
+du -sh ~/project/files/$PatchCode-$BRANCH-files*
 
 echo -e "Compression Done"
 
+sleep 2
+
 cd ~/project/files
 
-# Take md5
+echo -e "Taking md5 Hash"
 md5sum $PatchCode-$BRANCH-files* > $PatchCode-$BRANCH-files-$(date +%Y%m%d).md5sum
 cat $PatchCode-$BRANCH-files-$(date +%Y%m%d).md5sum
-
-# Make a Compressed file list for future reference
-tar -tJvf *.tar.xz | awk '{print $6}' >> $PatchCode-$BRANCH-files-$(date +%Y%m%d).list
-tar -I pxz -cf $PatchCode-$BRANCH-files.list.tar.xz *.list
-rm *.list
 
 # Show Total Sizes of the compressed files
 echo -en "Final Compressed size of the checked-out files is ---  "
@@ -99,8 +103,7 @@ cd ~/project/files/
 echo -e "Upload the Package to AFH"
 for file in $PatchCode-$BRANCH*; do wput $file ftp://"$FTPUser":"$FTPPass"@"$FTPHost"//$PatchCode-NoRepo/ ; done
 
-echo -e "Upload the Package to transfer.sh"
-for file in $PatchCode-$BRANCH*; do curl --upload-file $file https://transfer.sh/ && echo '' ; done
+sleep 2
 
 echo -e "GitHub Release"
 cd ~/project/
